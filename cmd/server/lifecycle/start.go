@@ -91,6 +91,8 @@ func runContainer(cli *client.Client, ctx context.Context, server *db.Server) {
 	if err := cli.ContainerStart(ctx, resp.ID, container.StartOptions{}); err != nil {
 		panic(err)
 	}
+
+	util.CloseDockerClient(cli)
 }
 
 func RegisterStartCmd(parent *cobra.Command) {

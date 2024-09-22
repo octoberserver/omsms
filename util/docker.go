@@ -15,6 +15,6 @@ func InitDockerClient() (context.Context, *client.Client) {
 	return ctx, cli
 }
 
-func CloseDockerClient(cli client.Client) {
+func CloseDockerClient(cli *client.Client) {
 	cli.Close()
 }

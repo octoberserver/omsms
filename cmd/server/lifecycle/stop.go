@@ -52,6 +52,8 @@ var stopCmd = &cobra.Command{
 		}
 
 		fmt.Println("伺服器成功關閉")
+
+		util.CloseDockerClient(cli)
 	},
 }
 
