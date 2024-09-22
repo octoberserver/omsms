@@ -28,6 +28,7 @@ var stopCmd = &cobra.Command{
 		}
 
 		ctx, cli := util.InitDockerClient()
+		defer util.CloseDockerClient(cli)
 
 		if !doesContainerExist(server.ID, cli, ctx) {
 			fmt.Println("伺服器並沒有在運行中")
@@ -52,8 +53,6 @@ var stopCmd = &cobra.Command{
 		}
 
 		fmt.Println("伺服器成功關閉")
-
-		util.CloseDockerClient(cli)
 	},
 }
 
