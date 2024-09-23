@@ -9,6 +9,7 @@ import (
 	"omsms/db"
 	"omsms/util"
 	"os"
+	"os/exec"
 	"strconv"
 
 	"github.com/docker/docker/api/types/container"
@@ -51,6 +52,8 @@ var startCmd = &cobra.Command{
 
 		runContainer(cli, ctx, &server)
 		fmt.Println("伺服器成功啟動")
+		createTmuxSession(server.ID)
+		fmt.Println("成功創建Tmux視窗")
 	},
 }
 
@@ -92,6 +95,22 @@ func runContainer(cli *client.Client, ctx context.Context, server *db.Server) {
 	}
 }
 
+func createTmuxSession(serverId uint) {
+	sessionName := fmt.Sprintf("omsms_%s", util.GetServerName(serverId))
+	fmt.Println(sessionName)
+
+	dockerAttachCmd := fmt.Sprintf("\"docker attach %s\"", util.GetServerName(serverId))
+	fmt.Println(dockerAttachCmd)
+	tmuxCmd := exec.Command("bash", "-c", fmt.Sprintf("(tmux new-session -d -s %s -n 十月模組伺服器 %s)&", sessionName, dockerAttachCmd))
+	tmuxCmd.Stdin = os.Stdin
+	tmuxCmd.Stdout = os.Stdout
+	tmuxCmd.Stderr = os.Stderr
+	err := tmuxCmd.Run()
+	if err != nil {
+		fmt.Println("Error creating tmux session:", err)
+		return
+	}
+}
 func RegisterStartCmd(parent *cobra.Command) {
 	startCmd.Flags().Uint32VarP(&startCmdId, "id", "i", 0, "伺服器ID")
 	startCmd.MarkFlagRequired("id")

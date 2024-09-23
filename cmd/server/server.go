@@ -24,4 +24,5 @@ func RegisterServerCmd(parent *cobra.Command) {
 	crud.RegisterDeleteCmd(serverCmd)
 	lifecycle.RegisterStartCmd(serverCmd)
 	lifecycle.RegisterStopCmd(serverCmd)
+	lifecycle.RegisterAttachCmd(serverCmd)
 }
