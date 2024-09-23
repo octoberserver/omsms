@@ -36,7 +36,7 @@ var stopCmd = &cobra.Command{
 		}
 
 		if util.IsContainerRunning(server.ID, cli, ctx) {
-			timeout := int(30 * time.Second) // Set the desired timeout for graceful shutdown
+			timeout := int(30 * time.Second)
 
 			fmt.Println("正在關閉舊容器")
 			err := cli.ContainerStop(ctx, util.GetServerName(server.ID), container.StopOptions{Timeout: &timeout})

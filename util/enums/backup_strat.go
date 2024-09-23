@@ -15,7 +15,6 @@ func (e *BackupStrat) String() string {
 	return string(*e)
 }
 
-// Set must have pointer receiver so it doesn't change the value of a copy
 func (e *BackupStrat) Set(v string) error {
 	switch v {
 	case "FULL_SERVER", "WORLD", "CUSTOM", "NONE":
@@ -26,7 +25,6 @@ func (e *BackupStrat) Set(v string) error {
 	}
 }
 
-// Type is only used in help text
 func (e *BackupStrat) Type() string {
 	return "BackupStrat"
 }

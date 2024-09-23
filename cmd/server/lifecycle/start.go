@@ -57,8 +57,6 @@ var startCmd = &cobra.Command{
 func runContainer(cli *client.Client, ctx context.Context, server *db.Server) {
 	server_name := util.GetServerName(server.ID)
 
-	// TODO: Check if docker container is already created for this server
-
 	path := util.GetServerFolderPath(server.ID)
 	image_name := fmt.Sprintf("docker.io/library/eclipse-temurin:%d", server.Java)
 

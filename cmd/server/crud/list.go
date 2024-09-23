@@ -20,7 +20,6 @@ var listCmd = &cobra.Command{
 		var servers []db.Server
 		db.DB.Find(&servers)
 
-		// TODO: Add is container created, running?
 		table := tablewriter.NewWriter(os.Stdout)
 		table.SetHeader([]string{"ID", "名稱", "Java", "備份策略", "運行狀態"})
 		table.SetAutoFormatHeaders(false)
@@ -55,5 +54,4 @@ func RegisterListCmd(parent *cobra.Command) {
 	listCmd.Flags().BoolVarP(&listCmdRunning, "running", "r", false, "只顯示運行中")
 	listCmd.MarkFlagRequired("id")
 	parent.AddCommand(listCmd)
-	// TODO: list running servers flag
 }
