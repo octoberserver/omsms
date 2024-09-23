@@ -35,8 +35,8 @@ var startCmd = &cobra.Command{
 		ctx, cli := util.InitDockerClient()
 		defer util.CloseDockerClient(cli)
 
-		if doesContainerExist(server.ID, cli, ctx) {
-			if isContainerRunning(server.ID, cli, ctx) {
+		if util.DoesContainerExist(server.ID, cli, ctx) {
+			if util.IsContainerRunning(server.ID, cli, ctx) {
 				log.Fatalln("伺服器正在運行中，請先關閉再啟動")
 				return
 			}

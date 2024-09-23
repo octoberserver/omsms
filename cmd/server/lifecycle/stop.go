@@ -30,12 +30,12 @@ var stopCmd = &cobra.Command{
 		ctx, cli := util.InitDockerClient()
 		defer util.CloseDockerClient(cli)
 
-		if !doesContainerExist(server.ID, cli, ctx) {
+		if !util.DoesContainerExist(server.ID, cli, ctx) {
 			fmt.Println("伺服器並沒有在運行中")
 			return
 		}
 
-		if isContainerRunning(server.ID, cli, ctx) {
+		if util.IsContainerRunning(server.ID, cli, ctx) {
 			timeout := int(30 * time.Second) // Set the desired timeout for graceful shutdown
 
 			fmt.Println("正在關閉舊容器")
