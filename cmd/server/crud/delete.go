@@ -22,7 +22,7 @@ var deleteCmd = &cobra.Command{
 		var server db.Server
 		if errors.Is(db.DB.First(&server, deleteCmdId).Error, gorm.ErrRecordNotFound) {
 			fmt.Println("伺服器不存在: " + strconv.FormatUint(uint64(deleteCmdId), 10))
-			return
+			os.Exit(0)
 		}
 
 		db.DB.Delete(&server)

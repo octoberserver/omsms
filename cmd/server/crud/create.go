@@ -31,7 +31,7 @@ var createCmd = &cobra.Command{
 		err := os.MkdirAll(path, os.ModePerm)
 		if err != nil {
 			fmt.Println("\033[32m無法創建資料夾: ", err)
-			return
+			os.Exit(0)
 		}
 
 		fmt.Println("\033[1;32m----創建伺服器----\033[0m")

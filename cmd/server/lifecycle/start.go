@@ -20,17 +20,29 @@ import (
 	"gorm.io/gorm"
 )
 
-var startCmdId uint32
+// var startCmdId uint32
 
 var startCmd = &cobra.Command{
 	Use:   "start",
 	Short: "啟動伺服器",
 	Long:  `啟動伺服器`,
+	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
+		if len(args) < 1 {
+			cmd.Help()
+			os.Exit(0)
+		}
+
+		id, err := strconv.Atoi(args[0])
+		if err != nil {
+			fmt.Println("ID必須是數字")
+			os.Exit(0)
+		}
+
 		var server db.Server
-		if errors.Is(db.DB.First(&server, startCmdId).Error, gorm.ErrRecordNotFound) {
-			log.Fatalln("伺服器不存在: " + strconv.FormatUint(uint64(startCmdId), 10))
-			return
+		if errors.Is(db.DB.First(&server, id).Error, gorm.ErrRecordNotFound) {
+			log.Println("伺服器不存在: " + strconv.FormatUint(uint64(id), 10))
+			os.Exit(0)
 		}
 
 		ctx, cli := util.InitDockerClient()
@@ -38,15 +50,15 @@ var startCmd = &cobra.Command{
 
 		if util.DoesContainerExist(server.ID, cli, ctx) {
 			if util.IsContainerRunning(server.ID, cli, ctx) {
-				log.Fatalln("伺服器正在運行中，請先關閉再啟動")
-				return
+				log.Println("伺服器正在運行中，請先關閉再啟動")
+				os.Exit(0)
 			}
 
 			fmt.Println("正在移除舊容器")
 			err := cli.ContainerRemove(ctx, util.GetServerName(server.ID), container.RemoveOptions{})
 			if err != nil {
-				log.Fatalf("無法移除容器: %v", err)
-				return
+				log.Printf("無法移除容器: %v", err)
+				os.Exit(0)
 			}
 		}
 
@@ -112,7 +124,7 @@ func createTmuxSession(serverId uint) {
 	}
 }
 func RegisterStartCmd(parent *cobra.Command) {
-	startCmd.Flags().Uint32VarP(&startCmdId, "id", "i", 0, "伺服器ID")
-	startCmd.MarkFlagRequired("id")
+	// startCmd.Flags().Uint32VarP(&startCmdId, "id", "i", 0, "伺服器ID")
+	// startCmd.MarkFlagRequired("id")
 	parent.AddCommand(startCmd)
 }
