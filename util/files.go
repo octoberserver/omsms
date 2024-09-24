@@ -153,9 +153,25 @@ func GiveExecutePermission(filePath string) {
 	err = os.Chmod(filePath, newMode)
 	if err != nil {
 		fmt.Println("\033[31m無法設定權限:", err, "\033[0m")
-		return
+		return //使用return因為權限設定失敗還是有可能可以正常值行
+	}
+}
+
+func CreateEulaTxt(serverFolderPath string) {
+	filePath := path.Join(serverFolderPath, "eula.txt")
+	if _, err := os.Stat(filePath); os.IsNotExist(err) {
+		if err := os.Remove(filePath); err != nil {
+			fmt.Println("\033[31m無法刪除eula.txt:", err, "\033[0m")
+			return //使用return因為權刪不掉還是有可能可以正常值行
+		}
 	}
 
-	// The file now has execute permission
-	println("\033[32m成功設定", filePath, "的權限", "\033[0m")
+	outFile, err := os.Create(filePath)
+	if err != nil {
+		fmt.Printf("\033[31m無法創建eula.txt: %v\033[0m\n", err)
+		os.Exit(1)
+	}
+	defer outFile.Close()
+
+	io.WriteString(outFile, "eula=true")
 }

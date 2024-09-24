@@ -55,7 +55,7 @@ var startCmd = &cobra.Command{
 				os.Exit(1)
 			}
 
-			fmt.Println("\033[34m正在移除舊容器\033[0m")
+			fmt.Println("\033[33m正在移除舊容器\033[0m")
 			err := cli.ContainerRemove(ctx, util.GetServerName(server.ID), container.RemoveOptions{})
 			if err != nil {
 				log.Printf("\033[31m無法移除容器: %v\033[0m", err)
@@ -63,11 +63,17 @@ var startCmd = &cobra.Command{
 			}
 		}
 
-		util.GiveExecutePermission(path.Join(util.GetServerFolderPath(server.ID), "start.sh"))
+		serverFolder := util.GetServerFolderPath(server.ID)
+		startShPath := path.Join(serverFolder, "start.sh")
+
+		util.GiveExecutePermission(startShPath)
+		println("\033[32m成功設定", startShPath, "的權限", "\033[0m")
+		util.CreateEulaTxt(serverFolder)
+		fmt.Println("\033[32m成功創建eula.txt\033[0m")
 
 		runContainer(cli, ctx, &server)
 		fmt.Println("\033[32m伺服器成功啟動\033[0m")
-		createTmuxSession(server.ID)
+		createTmuxSession(&server)
 		fmt.Println("\033[32m成功創建Tmux視窗\033[0m")
 	},
 }
@@ -113,16 +119,13 @@ func runContainer(cli *client.Client, ctx context.Context, server *db.Server) {
 	}
 }
 
-func createTmuxSession(serverId uint) {
-	sessionName := fmt.Sprintf("omsms_%s", util.GetServerName(serverId))
+func createTmuxSession(server *db.Server) {
+	sessionName := fmt.Sprintf("omsms_%s", util.GetServerName(server.ID))
 	fmt.Println(sessionName)
 
-	dockerAttachCmd := fmt.Sprintf("\"docker attach %s\"", util.GetServerName(serverId))
+	dockerAttachCmd := fmt.Sprintf("\"docker attach %s\"", util.GetServerName(server.ID))
 	fmt.Println(dockerAttachCmd)
-	tmuxCmd := exec.Command("bash", "-c", fmt.Sprintf("(tmux new-session -d -s %s -n 十月模組伺服器 %s)&", sessionName, dockerAttachCmd))
-	tmuxCmd.Stdin = os.Stdin
-	tmuxCmd.Stdout = os.Stdout
-	tmuxCmd.Stderr = os.Stderr
+	tmuxCmd := exec.Command("bash", "-c", fmt.Sprintf("(tmux new-session -d -s %s -n \"十月模組伺服器[ID: %d 名稱: '%s']\" %s)&", sessionName, server.ID, server.Name, dockerAttachCmd))
 	err := tmuxCmd.Run()
 	if err != nil {
 		fmt.Println("\033[31m無法創建Tmux視窗: ", err, "\033[0m")
