@@ -1,7 +1,6 @@
 package server
 
 import (
-	"fmt"
 	"omsms/cmd/server/crud"
 	"omsms/cmd/server/lifecycle"
 
@@ -10,10 +9,9 @@ import (
 
 var serverCmd = &cobra.Command{
 	Use:   "server",
-	Short: "管理伺服器",
-	Long:  `管理伺服器`,
+	Short: "\033[35m管理伺服器\033[0m",
+	Long:  "\033[35m管理伺服器\033[0m",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("管理伺服器")
 		cmd.Help()
 	},
 }
@@ -27,4 +25,5 @@ func RegisterServerCmd(parent *cobra.Command) {
 	lifecycle.RegisterStopCmd(serverCmd)
 	lifecycle.RegisterAttachCmd(serverCmd)
 	crud.RegisterAddFilesCmd(serverCmd)
+	crud.RegisterUpdateCmd(serverCmd)
 }

@@ -14,8 +14,8 @@ var listCmdRunning bool
 
 var listCmd = &cobra.Command{
 	Use:   "list",
-	Short: "\033[32m查看所有伺服器\033[0m",
-	Long:  `查看所有伺服器`,
+	Short: "\033[34m查看所有伺服器\033[0m",
+	Long:  "\033[34m查看所有伺服器\033[0m",
 	Run: func(cmd *cobra.Command, args []string) {
 		var servers []db.Server
 		db.DB.Find(&servers)

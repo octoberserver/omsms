@@ -18,8 +18,8 @@ var attachCmdDirect bool
 
 var attachCmd = &cobra.Command{
 	Use:   "attach",
-	Short: "\033[31m打開伺服器終端\033[0m",
-	Long:  `打開伺服器終端`,
+	Short: "\033[34m打開伺服器終端\033[0m",
+	Long:  "\033[34m打開伺服器終端\033[0m",
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) < 1 {
 			fmt.Println("\033[31m使用方式: omsms server attach [id]\033[0m")

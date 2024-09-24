@@ -25,8 +25,8 @@ import (
 
 var startCmd = &cobra.Command{
 	Use:   "start",
-	Short: "啟動伺服器",
-	Long:  `啟動伺服器`,
+	Short: "\033[34m啟動伺服器\033[0m",
+	Long:  "\033[34m啟動伺服器\033[0m",
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) < 1 {

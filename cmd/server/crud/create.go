@@ -17,7 +17,7 @@ var createCmdBackup enums.BackupStrat = enums.BACKUP_NONE
 var createCmd = &cobra.Command{
 	Use:   "create",
 	Short: "\033[32m創建伺服器\033[0m",
-	Long:  `創建伺服器`,
+	Long:  "\033[32m創建伺服器\033[0m",
 	Run: func(cmd *cobra.Command, args []string) {
 		server := &db.Server{
 			Name:   createCmdName,

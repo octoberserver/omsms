@@ -10,10 +10,11 @@ import (
 
 var rootCmd = &cobra.Command{
 	Use:   "omsms",
-	Short: "十月模組伺服器管理系統",
-	Long:  `十月模組伺服器管理系統`,
+	Short: "\033[35m十月模組伺服器管理系統\033[0m",
+	Long:  "\033[35m十月模組伺服器管理系統\033[0m",
 	Run: func(cmd *cobra.Command, args []string) {
 		println("\033[35m" + "歡迎來到十月模組伺服器管理系統")
+		cmd.Help()
 	},
 }
 

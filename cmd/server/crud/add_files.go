@@ -15,7 +15,7 @@ import (
 var addFilesCmd = &cobra.Command{
 	Use:   "add-files",
 	Short: "\033[32m新增檔案\033[0m",
-	Long:  `新增檔案`,
+	Long:  "\033[32m新增檔案\033[0m",
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) < 2 {
 			fmt.Println("\033[31m使用方式: omsms server add-files [id] [路徑]\033[0m")

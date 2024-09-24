@@ -9,6 +9,7 @@ const (
 	BACKUP_WORLD       BackupStrat = "WORLD"
 	BACKUP_CUSTOM      BackupStrat = "CUSTOM"
 	BACKUP_NONE        BackupStrat = "NONE"
+	BACKUP_NULL        BackupStrat = ""
 )
 
 func (e *BackupStrat) String() string {
@@ -21,7 +22,7 @@ func (e *BackupStrat) Set(v string) error {
 		*e = BackupStrat(v)
 		return nil
 	default:
-		return errors.New(`must be one of "FULL_SERVER", "WORLD", "CUSTOM" or "NONE"`)
+		return errors.New(`必須是 "FULL_SERVER", "WORLD", "CUSTOM" 或 "NONE"`)
 	}
 }
 

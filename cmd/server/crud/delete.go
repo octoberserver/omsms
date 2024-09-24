@@ -16,7 +16,7 @@ var deleteCmdId uint32
 var deleteCmd = &cobra.Command{
 	Use:   "delete",
 	Short: "\033[31m刪除伺服器\033[0m",
-	Long:  `刪除伺服器`,
+	Long:  "\033[31m刪除伺服器\033[0m",
 	Run: func(cmd *cobra.Command, args []string) {
 		var server db.Server
 		if errors.Is(db.DB.First(&server, deleteCmdId).Error, gorm.ErrRecordNotFound) {

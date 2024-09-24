@@ -19,7 +19,7 @@ import (
 var stopCmd = &cobra.Command{
 	Use:   "stop",
 	Short: "\033[33m關閉伺服器\033[0m",
-	Long:  `關閉伺服器`,
+	Long:  "\033[33m關閉伺服器\033[0m",
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) < 1 {
 			fmt.Println("\033[31m使用方式: omsms server stop [id]\033[0m")
