@@ -6,7 +6,6 @@ import (
 	"omsms/db"
 	"omsms/util"
 	"os"
-	"strconv"
 
 	"github.com/spf13/cobra"
 	"gorm.io/gorm"
@@ -16,13 +15,13 @@ var deleteCmdId uint32
 
 var deleteCmd = &cobra.Command{
 	Use:   "delete",
-	Short: "刪除伺服器",
+	Short: "\033[31m刪除伺服器\033[0m",
 	Long:  `刪除伺服器`,
 	Run: func(cmd *cobra.Command, args []string) {
 		var server db.Server
 		if errors.Is(db.DB.First(&server, deleteCmdId).Error, gorm.ErrRecordNotFound) {
-			fmt.Println("伺服器不存在: " + strconv.FormatUint(uint64(deleteCmdId), 10))
-			os.Exit(0)
+			fmt.Println("\033[31m伺服器不存在:", deleteCmdId, "\033[0m")
+			os.Exit(1)
 		}
 
 		db.DB.Delete(&server)
@@ -30,7 +29,7 @@ var deleteCmd = &cobra.Command{
 		path := util.GetServerFolderPath(server.ID)
 		err := os.RemoveAll(path)
 		if err != nil {
-			fmt.Println("\033[32m無法刪除資料夾: ", err)
+			fmt.Println("\033[31m無法刪除資料夾: ", err)
 		}
 
 		fmt.Println("\033[1;31m----刪除伺服器----")

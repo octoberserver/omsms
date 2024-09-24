@@ -18,37 +18,37 @@ var attachCmdDirect bool
 
 var attachCmd = &cobra.Command{
 	Use:   "attach",
-	Short: "打開伺服器終端",
+	Short: "\033[31m打開伺服器終端\033[0m",
 	Long:  `打開伺服器終端`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) < 1 {
-			cmd.Help()
-			os.Exit(0)
+			fmt.Println("\033[31m使用方式: omsms server attach [id]\033[0m")
+			os.Exit(1)
 		}
 
 		id, err := strconv.Atoi(args[0])
 		if err != nil {
-			fmt.Println("ID必須是數字")
-			os.Exit(0)
+			fmt.Println("\033[31mID必須是數字\033[0m")
+			os.Exit(1)
 		}
 
 		var server db.Server
 		if errors.Is(db.DB.First(&server, id).Error, gorm.ErrRecordNotFound) {
-			fmt.Println("伺服器不存在: " + strconv.FormatUint(uint64(id), 10))
-			os.Exit(0)
+			fmt.Println("\033[31m伺服器不存在:", id, "\033[0m")
+			os.Exit(1)
 		}
 
 		ctx, cli := util.InitDockerClient()
 		defer util.CloseDockerClient(cli)
 
 		if !util.DoesContainerExist(server.ID, cli, ctx) {
-			fmt.Println("伺服器並沒有在運行中")
-			os.Exit(0)
+			fmt.Println("\033[31m伺服器並沒有在運行中\033[0m")
+			os.Exit(1)
 		}
 
 		if !util.IsContainerRunning(server.ID, cli, ctx) {
-			fmt.Println("伺服器並沒有在運行中")
-			os.Exit(0)
+			fmt.Println("\033[31m伺服器並沒有在運行中\033[0m")
+			os.Exit(1)
 		}
 
 		if attachCmdDirect {
@@ -67,8 +67,8 @@ var attachCmd = &cobra.Command{
 		tmuxCmd.Stderr = os.Stderr
 		err = tmuxCmd.Run()
 		if err != nil {
-			fmt.Println("無法連接到Tmux視窗: ", err)
-			os.Exit(0)
+			fmt.Println("\033[31m無法連接到Tmux視窗: ", err, "\033[0m")
+			os.Exit(1)
 		}
 	},
 }

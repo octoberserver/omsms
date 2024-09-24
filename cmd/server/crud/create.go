@@ -16,7 +16,7 @@ var createCmdBackup enums.BackupStrat = enums.BACKUP_NONE
 
 var createCmd = &cobra.Command{
 	Use:   "create",
-	Short: "創建伺服器",
+	Short: "\033[32m創建伺服器\033[0m",
 	Long:  `創建伺服器`,
 	Run: func(cmd *cobra.Command, args []string) {
 		server := &db.Server{
@@ -30,8 +30,8 @@ var createCmd = &cobra.Command{
 		path := util.GetServerFolderPath(server.ID)
 		err := os.MkdirAll(path, os.ModePerm)
 		if err != nil {
-			fmt.Println("\033[32m無法創建資料夾: ", err)
-			os.Exit(0)
+			fmt.Println("\033[31m無法創建資料夾: ", err, "\033[0m")
+			os.Exit(1)
 		}
 
 		fmt.Println("\033[1;32m----創建伺服器----\033[0m")

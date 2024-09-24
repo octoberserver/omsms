@@ -14,6 +14,7 @@ var serverCmd = &cobra.Command{
 	Long:  `管理伺服器`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("管理伺服器")
+		cmd.Help()
 	},
 }
 
@@ -25,4 +26,5 @@ func RegisterServerCmd(parent *cobra.Command) {
 	lifecycle.RegisterStartCmd(serverCmd)
 	lifecycle.RegisterStopCmd(serverCmd)
 	lifecycle.RegisterAttachCmd(serverCmd)
+	crud.RegisterAddFilesCmd(serverCmd)
 }
