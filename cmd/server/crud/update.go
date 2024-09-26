@@ -8,6 +8,7 @@ import (
 	"omsms/util/enums"
 	"os"
 	"strconv"
+	"strings"
 
 	"github.com/spf13/cobra"
 	"gorm.io/gorm"
@@ -50,7 +51,7 @@ var updateCmd = &cobra.Command{
 			server.Backup = updateCmdBackup
 		}
 		if updateCmdProxy != "" {
-			server.ProxyHost = updateCmdProxy
+			server.HostNames = strings.Split(updateCmdProxy, ":")
 		}
 
 		ctx, cli := util.InitDockerClient()
@@ -70,6 +71,7 @@ var updateCmd = &cobra.Command{
 		fmt.Println("\033[33mJava版本:\033[0m", server.Java)
 		fmt.Println("\033[33m備份策略:\033[0m", server.Backup)
 		fmt.Println("\033[33m檔案路徑:\033[0m", path)
+		fmt.Println("\033[33m反向代理域名:\033[0m", server.HostNames)
 		fmt.Println("\033[1;32m------------------\033[0m")
 	},
 }
@@ -78,7 +80,6 @@ func RegisterUpdateCmd(parent *cobra.Command) {
 	updateCmd.Flags().StringVarP(&updateCmdName, "name", "n", "", "伺服器名稱")
 	updateCmd.Flags().Uint32VarP(&updateCmdJava, "java", "j", 0, "Java版本")
 	updateCmd.Flags().VarP(&updateCmdBackup, "backup", "b", `備份策略："FULL_SERVER", "WORLD", "CUSTOM" 或 "NONE"`)
-	updateCmd.Flags().StringVarP(&updateCmdProxy, "proxy", "p", "", "反向代理域名")
-	updateCmd.MarkFlagRequired("proxy")
+	updateCmd.Flags().StringVarP(&updateCmdProxy, "proxy", "p", "", "反向代理域名，可設定多個，使用:符號分開")
 	parent.AddCommand(updateCmd)
 }

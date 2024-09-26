@@ -11,7 +11,7 @@ type Server struct {
 	Name      string
 	Java      uint
 	Backup    enums.BackupStrat
-	ProxyHost string
+	HostNames []string `gorm:"type:json"`
 }
 
 func RegisterModels(db *gorm.DB) {

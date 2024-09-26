@@ -1,6 +1,7 @@
 package crud
 
 import (
+	"fmt"
 	"omsms/db"
 	"omsms/util"
 	"os"
@@ -21,7 +22,7 @@ var listCmd = &cobra.Command{
 		db.DB.Find(&servers)
 
 		table := tablewriter.NewWriter(os.Stdout)
-		table.SetHeader([]string{"ID", "名稱", "Java", "備份策略", "運行狀態"})
+		table.SetHeader([]string{"ID", "名稱", "Java", "備份策略", "域名", "運行狀態"})
 		table.SetAutoFormatHeaders(false)
 
 		ctx, cli := util.InitDockerClient()
@@ -43,6 +44,7 @@ var listCmd = &cobra.Command{
 				server.Name,
 				strconv.FormatInt(int64(server.Java), 10),
 				server.Backup.String(),
+				fmt.Sprintf("%v", server.HostNames),
 				status,
 			})
 		}

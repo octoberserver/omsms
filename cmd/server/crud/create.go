@@ -6,6 +6,7 @@ import (
 	"omsms/util"
 	"omsms/util/enums"
 	"os"
+	"strings"
 
 	"github.com/spf13/cobra"
 )
@@ -24,7 +25,7 @@ var createCmd = &cobra.Command{
 			Name:      createCmdName,
 			Java:      uint(createCmdJava),
 			Backup:    createCmdBackup,
-			ProxyHost: createCmdProxy,
+			HostNames: strings.Split(createCmdProxy, ":"),
 		}
 
 		db.DB.Create(server)
@@ -43,6 +44,7 @@ var createCmd = &cobra.Command{
 		fmt.Println("\033[33mJava版本:\033[0m", server.Java)
 		fmt.Println("\033[33m備份策略:\033[0m", server.Backup)
 		fmt.Println("\033[33m檔案路徑:\033[0m", path)
+		fmt.Println("\033[33m反向代理域名:\033[0m", server.HostNames)
 		fmt.Println("\033[1;32m------------------\033[0m")
 	},
 }
@@ -53,7 +55,6 @@ func RegisterCreateCmd(parent *cobra.Command) {
 	createCmd.Flags().Uint32VarP(&createCmdJava, "java", "j", 0, "Java版本")
 	createCmd.MarkFlagRequired("java")
 	createCmd.Flags().VarP(&createCmdBackup, "backup", "b", `備份策略："FULL_SERVER", "WORLD", "CUSTOM" 或 "NONE"`)
-	createCmd.Flags().StringVarP(&createCmdProxy, "proxy", "p", "", "反向代理域名")
-	createCmd.MarkFlagRequired("proxy")
+	createCmd.Flags().StringVarP(&createCmdProxy, "proxy", "p", "", "反向代理域名，可設定多個，使用:符號分開")
 	parent.AddCommand(createCmd)
 }
