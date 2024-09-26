@@ -27,7 +27,8 @@ var listCmd = &cobra.Command{
 		ctx, cli := util.InitDockerClient()
 
 		for _, server := range servers {
-			isRunning := util.DoesContainerExist(server.ID, cli, ctx) && util.IsContainerRunning(server.ID, cli, ctx)
+			containerName := util.GetServerName(server.ID)
+			isRunning := util.DoesContainerExist(containerName, cli, ctx) && util.IsContainerRunning(containerName, cli, ctx)
 			if listCmdRunning && !isRunning {
 				continue
 			}

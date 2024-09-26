@@ -40,13 +40,14 @@ var attachCmd = &cobra.Command{
 
 		ctx, cli := util.InitDockerClient()
 		defer util.CloseDockerClient(cli)
+		srvName := util.GetServerName(server.ID)
 
-		if !util.DoesContainerExist(server.ID, cli, ctx) {
+		if !util.DoesContainerExist(srvName, cli, ctx) {
 			fmt.Println("\033[31m伺服器並沒有在運行中\033[0m")
 			os.Exit(1)
 		}
 
-		if !util.IsContainerRunning(server.ID, cli, ctx) {
+		if !util.IsContainerRunning(srvName, cli, ctx) {
 			fmt.Println("\033[31m伺服器並沒有在運行中\033[0m")
 			os.Exit(1)
 		}

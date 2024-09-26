@@ -24,13 +24,16 @@ var deleteCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		db.DB.Delete(&server)
+		ctx, cli := util.InitDockerClient()
+		util.DeleteProxyHost(cli, ctx, &server)
 
 		path := util.GetServerFolderPath(server.ID)
 		err := os.RemoveAll(path)
 		if err != nil {
 			fmt.Println("\033[31m無法刪除資料夾: ", err)
 		}
+
+		db.DB.Delete(&server)
 
 		fmt.Println("\033[1;31m----刪除伺服器----")
 		fmt.Println("\033[1;31m伺服器ID:\033[0m", server.ID)

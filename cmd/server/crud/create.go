@@ -13,6 +13,7 @@ import (
 var createCmdName string
 var createCmdJava uint32
 var createCmdBackup enums.BackupStrat = enums.BACKUP_NONE
+var createCmdProxy string
 
 var createCmd = &cobra.Command{
 	Use:   "create",
@@ -20,9 +21,10 @@ var createCmd = &cobra.Command{
 	Long:  "\033[32m創建伺服器\033[0m",
 	Run: func(cmd *cobra.Command, args []string) {
 		server := &db.Server{
-			Name:   createCmdName,
-			Java:   uint(createCmdJava),
-			Backup: createCmdBackup,
+			Name:      createCmdName,
+			Java:      uint(createCmdJava),
+			Backup:    createCmdBackup,
+			ProxyHost: createCmdProxy,
 		}
 
 		db.DB.Create(server)
@@ -51,5 +53,7 @@ func RegisterCreateCmd(parent *cobra.Command) {
 	createCmd.Flags().Uint32VarP(&createCmdJava, "java", "j", 0, "Java版本")
 	createCmd.MarkFlagRequired("java")
 	createCmd.Flags().VarP(&createCmdBackup, "backup", "b", `備份策略："FULL_SERVER", "WORLD", "CUSTOM" 或 "NONE"`)
+	createCmd.Flags().StringVarP(&createCmdProxy, "proxy", "p", "", "反向代理域名")
+	createCmd.MarkFlagRequired("proxy")
 	parent.AddCommand(createCmd)
 }

@@ -41,12 +41,13 @@ var stopCmd = &cobra.Command{
 		ctx, cli := util.InitDockerClient()
 		defer util.CloseDockerClient(cli)
 
-		if !util.DoesContainerExist(server.ID, cli, ctx) {
+		srvName := util.GetServerName(server.ID)
+		if !util.DoesContainerExist(srvName, cli, ctx) {
 			fmt.Println("\033[31m伺服器並沒有在運行中\033[0m")
 			os.Exit(1)
 		}
 
-		if util.IsContainerRunning(server.ID, cli, ctx) {
+		if util.IsContainerRunning(srvName, cli, ctx) {
 			timeout := int(30 * time.Second)
 
 			fmt.Println("\033[34m正在關閉舊容器\033[0m")
@@ -63,6 +64,8 @@ var stopCmd = &cobra.Command{
 			fmt.Printf("\033[31m無法移除容器: %v\033[0m\n", err)
 			os.Exit(1)
 		}
+
+		util.DeleteProxyHost(cli, ctx, &server)
 
 		fmt.Println("\033[32m伺服器成功關閉\033[0m")
 	},

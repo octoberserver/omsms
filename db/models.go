@@ -8,9 +8,10 @@ import (
 
 type Server struct {
 	gorm.Model
-	Name   string
-	Java   uint
-	Backup enums.BackupStrat
+	Name      string
+	Java      uint
+	Backup    enums.BackupStrat
+	ProxyHost string
 }
 
 func RegisterModels(db *gorm.DB) {

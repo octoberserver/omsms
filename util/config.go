@@ -17,3 +17,7 @@ func GetServerName(serverId uint) string {
 func GetServerFolderPath(serverId uint) string {
 	return fmt.Sprintf("%s/server_files/%s", getRootPath(), GetServerName(serverId))
 }
+
+func GetProxyContainerName() string {
+	return "SalmonProxy"
+}

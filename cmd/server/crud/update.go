@@ -16,6 +16,7 @@ import (
 var updateCmdName string
 var updateCmdJava uint32
 var updateCmdBackup enums.BackupStrat = enums.BACKUP_NULL
+var updateCmdProxy string
 
 var updateCmd = &cobra.Command{
 	Use:   "update",
@@ -48,6 +49,15 @@ var updateCmd = &cobra.Command{
 		if updateCmdBackup != enums.BACKUP_NULL {
 			server.Backup = updateCmdBackup
 		}
+		if updateCmdProxy != "" {
+			server.ProxyHost = updateCmdProxy
+		}
+
+		ctx, cli := util.InitDockerClient()
+		err = util.SetProxyHost(cli, ctx, &server)
+		if err == nil {
+			fmt.Println("\033[32m成功設定反向代理\033[0m")
+		}
 
 		db.DB.Save(server)
 
@@ -68,5 +78,7 @@ func RegisterUpdateCmd(parent *cobra.Command) {
 	updateCmd.Flags().StringVarP(&updateCmdName, "name", "n", "", "伺服器名稱")
 	updateCmd.Flags().Uint32VarP(&updateCmdJava, "java", "j", 0, "Java版本")
 	updateCmd.Flags().VarP(&updateCmdBackup, "backup", "b", `備份策略："FULL_SERVER", "WORLD", "CUSTOM" 或 "NONE"`)
+	updateCmd.Flags().StringVarP(&updateCmdProxy, "proxy", "p", "", "反向代理域名")
+	updateCmd.MarkFlagRequired("proxy")
 	parent.AddCommand(updateCmd)
 }

@@ -16,6 +16,7 @@ import (
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/image"
 	"github.com/docker/docker/api/types/mount"
+	"github.com/docker/docker/api/types/network"
 	"github.com/docker/docker/client"
 	"github.com/spf13/cobra"
 	"gorm.io/gorm"
@@ -49,8 +50,9 @@ var startCmd = &cobra.Command{
 		ctx, cli := util.InitDockerClient()
 		defer util.CloseDockerClient(cli)
 
-		if util.DoesContainerExist(server.ID, cli, ctx) {
-			if util.IsContainerRunning(server.ID, cli, ctx) {
+		srvName := util.GetServerName(server.ID)
+		if util.DoesContainerExist(srvName, cli, ctx) {
+			if util.IsContainerRunning(srvName, cli, ctx) {
 				fmt.Println("\033[31m伺服器正在運行中，請先關閉再啟動\033[0m")
 				os.Exit(1)
 			}
@@ -75,6 +77,10 @@ var startCmd = &cobra.Command{
 		fmt.Println("\033[32m伺服器成功啟動\033[0m")
 		createTmuxSession(&server)
 		fmt.Println("\033[32m成功創建Tmux視窗\033[0m")
+		err = util.SetProxyHost(cli, ctx, &server)
+		if err == nil {
+			fmt.Println("\033[32m成功設定反向代理\033[0m")
+		}
 	},
 }
 
@@ -107,7 +113,11 @@ func runContainer(cli *client.Client, ctx context.Context, server *db.Server) {
 			Source: path,
 			Target: "/mc_server",
 		}},
-	}, nil, nil, server_name)
+	}, &network.NetworkingConfig{
+		EndpointsConfig: map[string]*network.EndpointSettings{
+			"salmon_proxied": {NetworkID: "salmon_proxied"},
+		},
+	}, nil, server_name)
 	if err != nil {
 		fmt.Println("\033[31m無法創建容器: ", err, "\033[0m")
 		os.Exit(1)
@@ -132,6 +142,7 @@ func createTmuxSession(server *db.Server) {
 		os.Exit(1)
 	}
 }
+
 func RegisterStartCmd(parent *cobra.Command) {
 	// startCmd.Flags().Uint32VarP(&startCmdId, "id", "i", 0, "伺服器ID")
 	// startCmd.MarkFlagRequired("id")

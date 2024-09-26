@@ -23,8 +23,8 @@ func CloseDockerClient(cli *client.Client) {
 	cli.Close()
 }
 
-func DoesContainerExist(serverId uint, cli *client.Client, ctx context.Context) bool {
-	_, err := cli.ContainerInspect(ctx, GetServerName(serverId))
+func DoesContainerExist(name string, cli *client.Client, ctx context.Context) bool {
+	_, err := cli.ContainerInspect(ctx, name)
 	if err != nil {
 		// Handle the error if the container doesn't exist
 		if strings.Contains(err.Error(), "No such container") {
@@ -38,8 +38,8 @@ func DoesContainerExist(serverId uint, cli *client.Client, ctx context.Context) 
 	return true
 }
 
-func IsContainerRunning(serverId uint, cli *client.Client, ctx context.Context) bool {
-	container, err := cli.ContainerInspect(ctx, GetServerName(serverId))
+func IsContainerRunning(name string, cli *client.Client, ctx context.Context) bool {
+	container, err := cli.ContainerInspect(ctx, name)
 	if err != nil {
 		fmt.Printf("\033[31m檢測容器失敗: %v\n", err)
 		fmt.Println("失敗函式: IsContainerRunning\033[0m")
