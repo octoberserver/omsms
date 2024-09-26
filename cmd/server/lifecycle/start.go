@@ -101,7 +101,7 @@ func runContainer(cli *client.Client, ctx context.Context, server *db.Server) {
 
 	resp, err := cli.ContainerCreate(ctx, &container.Config{
 		Image:        image_name,
-		Cmd:          []string{"/bin/bash", "-c", `"cd ls && echo hi"`},
+		Cmd:          []string{"/bin/bash", "-c", `"\"cd ls && echo hi\""`},
 		Tty:          true,
 		OpenStdin:    true,
 		AttachStdin:  true,
